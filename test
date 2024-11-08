@@ -1,0 +1,37 @@
+// ==UserScript==
+// @name         YouTube Views Comparator
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Compare les vues des vidéos YouTube par rapport à celle de la vidéo précédente
+// @author       You
+// @match        https://www.youtube.com/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Récupère le nombre de vues de la vidéo actuelle
+    let currentViews = document.querySelector('.view-count').textContent.trim();
+    currentViews = parseInt(currentViews.replace(/\D/g, '')); // Convertir en nombre entier
+
+    // Vérifie si une vidéo précédente a déjà été visitée
+    let lastViews = localStorage.getItem('lastViews');
+    
+    if (lastViews) {
+        lastViews = parseInt(lastViews);
+
+        // Comparer les vues
+        if (currentViews > lastViews + 5) {
+            alert('La vidéo a plus de 5 vues par rapport à la précédente !');
+        } else if (currentViews < lastViews - 5) {
+            alert('La vidéo a moins de 5 vues par rapport à la précédente.');
+        } else {
+            alert('La vidéo a un nombre de vues similaire à la précédente.');
+        }
+    }
+
+    // Sauvegarder les vues actuelles pour la prochaine vidéo
+    localStorage.setItem('lastViews', currentViews);
+
+})();
